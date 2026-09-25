@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Zenova UTME — Leaderboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy-deep:#05112A; --navy:#0B1F3A; --paper:#FFFFFF; --paper-dim:#F5F7FB;
+    --line:#E3E8F0; --ink:#0B1F3A; --ink-dim:#5B6B85;
+    --gold-bg:#EFE0BE; --gold-ink:#8A6D00;
+    --silver-bg:#E7EAF0; --silver-ink:#4B5871;
+    --bronze-bg:#EFD9C4; --bronze-ink:#8A4E1F;
+    --radius-lg:20px; --radius-sm:12px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Plus Jakarta Sans', system-ui, sans-serif;
+    background:var(--paper); color:var(--ink); -webkit-font-smoothing:antialiased;
+    padding-bottom:96px;
+  }
+  a,button{text-decoration:none;color:inherit;font-family:inherit;}
+  button{border:none;background:none;cursor:pointer;}
+  .wrap{max-width:480px;margin:0 auto;position:relative;min-height:100vh;background:var(--paper);}
+  svg{display:block;}
+  .hidden{display:none !important;}
+
+  /* Top bar */
+  .topbar{display:flex;align-items:center;gap:12px;padding:20px 20px 6px;}
+  .backbtn{
+    width:36px;height:36px;border-radius:10px;background:var(--paper-dim);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .topbar-title{font-size:17px;font-weight:800;letter-spacing:-.01em;}
+  .topbar-sub{font-size:12.5px;color:var(--ink-dim);margin-top:1px;}
+
+  /* Podium */
+  .podium{
+    display:flex;align-items:flex-end;justify-content:center;gap:10px;
+    padding:26px 20px 6px;
+  }
+  .podium-slot{display:flex;flex-direction:column;align-items:center;flex:1;max-width:130px;}
+  .podium-avatar{
+    width:52px;height:52px;border-radius:50%;
+    background:var(--paper-dim);border:2px solid var(--line);
+    display:flex;align-items:center;justify-content:center;
+    font-size:16px;font-weight:800;color:var(--navy);
+    margin-bottom:8px;
+  }
+  .podium-slot.first .podium-avatar{width:64px;height:64px;font-size:19px;border-color:var(--gold-bg);background:#FDF6E3;}
+  .podium-name{font-size:12.5px;font-weight:700;text-align:center;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .podium-score{font-size:11.5px;color:var(--ink-dim);font-weight:600;margin-top:1px;}
+  .podium-bar{
+    width:100%;border-radius:14px 14px 0 0;margin-top:10px;
+    display:flex;align-items:flex-start;justify-content:center;padding-top:10px;
+    font-size:15px;font-weight:800;
+  }
+  .podium-slot.first .podium-bar{height:78px;background:var(--gold-bg);color:var(--gold-ink);}
+  .podium-slot.second .podium-bar{height:58px;background:var(--silver-bg);color:var(--silver-ink);}
+  .podium-slot.third .podium-bar{height:46px;background:var(--bronze-bg);color:var(--bronze-ink);}
+
+  /* List */
+  .section-title{padding:26px 20px 10px;font-size:13px;font-weight:700;color:var(--ink-dim);}
+  .lb-list{padding:0 20px;display:flex;flex-direction:column;gap:8px;}
+  .lb-row{
+    display:flex;align-items:center;gap:12px;
+    border:1px solid var(--line);border-radius:var(--radius-sm);
+    padding:12px 14px;
+  }
+  .lb-row.is-you{border-color:var(--navy);background:var(--paper-dim);}
+  .lb-rank{
+    width:26px;height:26px;border-radius:50%;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+    font-size:12px;font-weight:800;background:var(--paper-dim);color:var(--ink-dim);
+  }
+  .lb-avatar{
+    width:34px;height:34px;border-radius:50%;flex-shrink:0;
+    background:var(--paper-dim);border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;
+    font-size:11.5px;font-weight:700;color:var(--navy);
+  }
+  .lb-name{flex:1;font-size:13.5px;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .lb-name .you-tag{font-size:10.5px;color:var(--navy);font-weight:700;margin-left:6px;}
+  .lb-score{font-size:13px;font-weight:800;color:var(--navy);flex-shrink:0;}
+  .lb-empty{padding:30px 0;text-align:center;font-size:13.5px;color:var(--ink-dim);}
+
+  /* Sticky "your rank" */
+  .your-rank-card{
+    position:fixed;left:50%;transform:translateX(-50%);
+    bottom:76px;width:calc(100% - 40px);max-width:440px;
+    background:var(--navy);color:#fff;border-radius:16px;
+    padding:13px 16px;display:flex;align-items:center;gap:12px;
+    box-shadow:0 10px 30px rgba(11,31,58,.25);
+  }
+  .your-rank-badge{
+    width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.14);
+    display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:800;flex-shrink:0;
+  }
+  .your-rank-body{flex:1;min-width:0;}
+  .your-rank-label{font-size:11px;color:#9DAAC9;font-weight:600;}
+  .your-rank-name{font-size:13.5px;font-weight:700;}
+  .your-rank-score{font-size:15px;font-weight:800;flex-shrink:0;}
+
+  /* Bottom nav */
+  .bottomnav{
+    position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+    width:100%;max-width:480px;background:#fff;border-top:1px solid var(--line);
+    display:flex;justify-content:space-around;
+    padding:10px 6px calc(10px + env(safe-area-inset-bottom));
+  }
+  .nav-item{
+    display:flex;flex-direction:column;align-items:center;gap:5px;
+    font-size:10.5px;font-weight:600;color:var(--ink-dim);flex:1;
+  }
+  .nav-item svg{stroke:var(--ink-dim);}
+  .nav-item.active{color:var(--navy);}
+  .nav-item.active svg{stroke:var(--navy);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <a class="backbtn" href="index.html">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <div>
+      <div class="topbar-title">Leaderboard</div>
+      <div class="topbar-sub">Ranked by total correct answers</div>
+    </div>
+  </div>
+
+  <div class="podium" id="podium"><!-- injected --></div>
+
+  <div class="section-title">Full ranking</div>
+  <div class="lb-list" id="lb-list"><div class="lb-empty">Loading leaderboard…</div></div>
+
+  <div class="your-rank-card hidden" id="your-rank-card">
+    <div class="your-rank-badge" id="your-rank-num">—</div>
+    <div class="your-rank-body">
+      <div class="your-rank-label">Your position</div>
+      <div class="your-rank-name" id="your-rank-name">You</div>
+    </div>
+    <div class="your-rank-score" id="your-rank-score">0</div>
+  </div>
+
+  <div class="bottomnav">
+    <a class="nav-item" href="index.html">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 11.5 12 4l9 7.5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 10v9.5a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Home
+    </a>
+    <a class="nav-item" href="past-questions.html">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Practice
+    </a>
+    <a class="nav-item active" href="leaderboard.html">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 6H4a1 1 0 0 0-1 1c0 2.5 1.8 4.5 4 4.9M17 6h3a1 1 0 0 1 1 1c0 2.5-1.8 4.5-4 4.9" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Rank
+    </a>
+    <a class="nav-item" href="profile.html">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.4" stroke-width="1.8"/><path d="M5 20c1.2-3.6 4-5.4 7-5.4s5.8 1.8 7 5.4" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Profile
+    </a>
+  </div>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyB3nxbOJHpJvSV1rrpXUy-RJBo_HG8xW6s",
+    authDomain: "past-question-bb34a.firebaseapp.com",
+    projectId: "past-question-bb34a",
+    storageBucket: "past-question-bb34a.firebasestorage.app",
+    messagingSenderId: "949891995843",
+    appId: "1:949891995843:web:28b137ac344b2bac31aa76"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  function initials(name){
+    if (!name) return "?";
+    const parts = name.trim().split(/\s+/);
+    return (parts[0][0] + (parts[1] ? parts[1][0] : "")).toUpperCase();
+  }
+
+  const LEADERBOARD_LIMIT = 50;
+
+  async function loadLeaderboard(){
+    const podiumEl = document.getElementById("podium");
+    const listEl = document.getElementById("lb-list");
+
+    try {
+      const snap = await db.collection("leaderboard")
+        .orderBy("score", "desc")
+        .limit(LEADERBOARD_LIMIT)
+        .get();
+
+      if (snap.empty){
+        podiumEl.innerHTML = "";
+        listEl.innerHTML = `<div class="lb-empty">No scores yet — be the first on the board.</div>`;
+        return;
+      }
+
+      const entries = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      const currentUser = auth.currentUser;
+
+      // ---- Podium (top 3) ----
+      const podiumOrder = [1, 0, 2]; // 2nd, 1st, 3rd visual order
+      const slotClass = ["second", "first", "third"];
+      podiumEl.innerHTML = podiumOrder.map((entryIdx, slotIdx) => {
+        const e = entries[entryIdx];
+        if (!e) return "";
+        return `
+          <div class="podium-slot ${slotClass[slotIdx]}">
+            <div class="podium-avatar">${initials(e.name)}</div>
+            <div class="podium-name">${e.name || "Anonymous"}</div>
+            <div class="podium-score">${e.score ?? 0} pts</div>
+            <div class="podium-bar">${entryIdx + 1}</div>
+          </div>`;
+      }).join("");
+
+      // ---- Full list (rank 4+) ----
+      const rest = entries.slice(3);
+      if (rest.length === 0){
+        listEl.innerHTML = `<div class="lb-empty">That's everyone so far — more ranks appear as students practice.</div>`;
+      } else {
+        listEl.innerHTML = rest.map((e, i) => {
+          const rank = i + 4;
+          const isYou = currentUser && e.id === currentUser.uid;
+          return `
+            <div class="lb-row ${isYou ? "is-you" : ""}">
+              <div class="lb-rank">${rank}</div>
+              <div class="lb-avatar">${initials(e.name)}</div>
+              <div class="lb-name">${e.name || "Anonymous"}${isYou ? '<span class="you-tag">YOU</span>' : ""}</div>
+              <div class="lb-score">${e.score ?? 0}</div>
+            </div>`;
+        }).join("");
+      }
+
+      // ---- Sticky "your rank" ----
+      if (currentUser){
+        const myIndex = entries.findIndex(e => e.id === currentUser.uid);
+        if (myIndex >= 3){ // only show sticky card if not already visible in podium
+          const me = entries[myIndex];
+          document.getElementById("your-rank-num").textContent = myIndex + 1;
+          document.getElementById("your-rank-name").textContent = me.name || "You";
+          document.getElementById("your-rank-score").textContent = me.score ?? 0;
+          document.getElementById("your-rank-card").classList.remove("hidden");
+        } else if (myIndex === -1) {
+          // Signed in but no score yet
+          document.getElementById("your-rank-num").textContent = "—";
+          document.getElementById("your-rank-name").textContent = "You haven't scored yet";
+          document.getElementById("your-rank-score").textContent = "0";
+          document.getElementById("your-rank-card").classList.remove("hidden");
+        }
+      }
+    } catch (e) {
+      podiumEl.innerHTML = "";
+      listEl.innerHTML = `<div class="lb-empty">Couldn't load the leaderboard right now.</div>`;
+      console.warn(e.message);
+    }
+  }
+
+  auth.onAuthStateChanged(() => loadLeaderboard());
+</script>
+</body>
+</html>

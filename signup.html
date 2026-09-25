@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Zenova UTME — Sign Up</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy-deep:#05112A; --navy:#0B1F3A; --paper:#FFFFFF; --paper-dim:#F5F7FB;
+    --line:#E3E8F0; --ink:#0B1F3A; --ink-dim:#5B6B85; --bad:#C7402C;
+    --radius-lg:20px; --radius-sm:12px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Plus Jakarta Sans', system-ui, sans-serif;
+    background:var(--paper); color:var(--ink); -webkit-font-smoothing:antialiased;
+  }
+  a,button{text-decoration:none;color:inherit;font-family:inherit;}
+  button{border:none;background:none;cursor:pointer;}
+  .wrap{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;padding:0 24px;}
+
+  .top{padding:44px 0 8px;display:flex;align-items:center;gap:10px;}
+  .brand-mark{
+    width:38px;height:38px;border-radius:11px;background:var(--navy);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .brand-name{font-weight:700;font-size:15px;}
+  .brand-name span{color:var(--ink-dim);font-weight:500;}
+
+  .heading{padding:36px 0 4px;}
+  .heading h1{font-size:27px;font-weight:800;letter-spacing:-.02em;margin:0 0 6px;}
+  .heading p{margin:0;font-size:14px;color:var(--ink-dim);line-height:1.5;}
+
+  form{padding-top:26px;display:flex;flex-direction:column;gap:16px;}
+  .field label{font-size:12.5px;font-weight:700;color:var(--ink-dim);display:block;margin-bottom:7px;}
+  .field input{
+    width:100%;padding:14px 15px;border-radius:var(--radius-sm);
+    border:1px solid var(--line);font-size:14.5px;font-family:inherit;
+    background:var(--paper-dim);color:var(--ink);
+  }
+  .field input:focus{outline:2px solid var(--navy);outline-offset:1px;background:var(--paper);}
+  .field-hint{font-size:11.5px;color:var(--ink-dim);margin-top:6px;}
+
+  .error-box{
+    display:none;
+    background:#FBE7E3;color:var(--bad);font-size:13px;font-weight:600;
+    padding:12px 14px;border-radius:var(--radius-sm);
+  }
+  .error-box.show{display:block;}
+
+  .btn-primary{
+    margin-top:6px;width:100%;padding:15px;border-radius:999px;
+    background:var(--navy);color:#fff;font-size:15px;font-weight:700;text-align:center;
+  }
+  .btn-primary:disabled{background:#B7C0D4;}
+
+  .terms{font-size:12px;color:var(--ink-dim);line-height:1.5;text-align:center;margin-top:14px;}
+
+  .footer-link{
+    text-align:center;margin-top:auto;padding:28px 0 36px;
+    font-size:13.5px;color:var(--ink-dim);
+  }
+  .footer-link a{color:var(--navy);font-weight:700;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <div class="brand-mark">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 19V5a2 2 0 0 1 2-2h11.5a1.5 1.5 0 0 1 1.5 1.5v14" stroke="#C99A2E" stroke-width="2" stroke-linecap="round"/><path d="M4 19a2 2 0 0 0 2 2h13" stroke="#C99A2E" stroke-width="2" stroke-linecap="round"/></svg>
+    </div>
+    <div class="brand-name">Zenova <span>UTME</span></div>
+  </div>
+
+  <div class="heading">
+    <h1>Create your account</h1>
+    <p>Track your scores, climb the leaderboard, and pick up practice right where you stopped.</p>
+  </div>
+
+  <div class="error-box" id="error-box"></div>
+
+  <form id="signup-form">
+    <div class="field">
+      <label for="fullname">Full name</label>
+      <input type="text" id="fullname" placeholder="e.g. Testimony Adewale" required autocomplete="name">
+    </div>
+    <div class="field">
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="you@example.com" required autocomplete="email">
+    </div>
+    <div class="field">
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="At least 6 characters" required autocomplete="new-password" minlength="6">
+      <div class="field-hint">Use at least 6 characters.</div>
+    </div>
+    <div class="field">
+      <label for="confirm">Confirm password</label>
+      <input type="password" id="confirm" placeholder="••••••••" required autocomplete="new-password">
+    </div>
+    <button type="submit" class="btn-primary" id="submit-btn">Create Account</button>
+  </form>
+
+  <div class="terms">By signing up you agree to practice consistently and be kind on the leaderboard 🙂</div>
+
+  <div class="footer-link">
+    Already have an account? <a href="login.html">Log in</a>
+  </div>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyB3nxbOJHpJvSV1rrpXUy-RJBo_HG8xW6s",
+    authDomain: "past-question-bb34a.firebaseapp.com",
+    projectId: "past-question-bb34a",
+    storageBucket: "past-question-bb34a.firebasestorage.app",
+    messagingSenderId: "949891995843",
+    appId: "1:949891995843:web:28b137ac344b2bac31aa76"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  const form = document.getElementById("signup-form");
+  const errorBox = document.getElementById("error-box");
+  const submitBtn = document.getElementById("submit-btn");
+
+  function showError(msg){
+    errorBox.textContent = msg;
+    errorBox.classList.add("show");
+  }
+
+  const FRIENDLY_ERRORS = {
+    "auth/email-already-in-use": "An account already exists with that email.",
+    "auth/invalid-email": "That email address doesn't look right.",
+    "auth/weak-password": "Password should be at least 6 characters."
+  };
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    errorBox.classList.remove("show");
+
+    const fullname = document.getElementById("fullname").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+    const confirm = document.getElementById("confirm").value;
+
+    if (password !== confirm){
+      showError("Passwords don't match.");
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Creating account…";
+
+    try {
+      const cred = await auth.createUserWithEmailAndPassword(email, password);
+      await cred.user.updateProfile({ displayName: fullname });
+
+      // Store a basic profile doc for admin/leaderboard use
+      await db.collection("users").doc(cred.user.uid).set({
+        name: fullname,
+        email,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+
+      window.location.href = "index.html";
+    } catch (err) {
+      showError(FRIENDLY_ERRORS[err.code] || "Something went wrong. Please try again.");
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Create Account";
+    }
+  });
+
+  auth.onAuthStateChanged((user) => {
+    if (user) window.location.href = "index.html";
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Zenova UTME — Past Questions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy-deep:#05112A;
+    --navy:#0B1F3A;
+    --navy-soft:#13294F;
+    --paper:#FFFFFF;
+    --paper-dim:#F5F7FB;
+    --line:#E3E8F0;
+    --ink:#0B1F3A;
+    --ink-dim:#5B6B85;
+    --good:#1E8E5A;
+    --bad:#C7402C;
+    --radius-lg:20px;
+    --radius-sm:12px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Plus Jakarta Sans', system-ui, sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    padding-bottom:96px;
+  }
+  a,button{text-decoration:none;color:inherit;font-family:inherit;}
+  button{border:none;background:none;cursor:pointer;padding:0;}
+  .wrap{max-width:480px;margin:0 auto;position:relative;min-height:100vh;background:var(--paper);}
+  svg{display:block;}
+  .hidden{display:none !important;}
+
+  /* ---------- Top bar ---------- */
+  .topbar{
+    display:flex;align-items:center;gap:12px;
+    padding:20px 20px 6px;
+  }
+  .backbtn{
+    width:36px;height:36px;border-radius:10px;
+    background:var(--paper-dim);
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+  }
+  .topbar-title{font-size:17px;font-weight:800;letter-spacing:-.01em;}
+  .topbar-sub{font-size:12.5px;color:var(--ink-dim);margin-top:1px;}
+
+  /* ======================= SUBJECT SELECT ======================= */
+  .intro{padding:14px 20px 4px;}
+  .intro p{margin:0;font-size:14px;color:var(--ink-dim);line-height:1.55;max-width:38ch;}
+
+  .subject-grid{
+    padding:18px 20px 0;
+    display:grid;grid-template-columns:1fr 1fr;gap:12px;
+  }
+  .subject-card{
+    border:1px solid var(--line);
+    border-radius:var(--radius-lg);
+    padding:16px 14px;
+    display:flex;flex-direction:column;gap:10px;
+    background:var(--paper);
+    transition:transform .15s ease;
+  }
+  .subject-card:active{transform:scale(.97);}
+  .subject-icon{
+    width:40px;height:40px;border-radius:12px;
+    background:var(--paper-dim);color:var(--navy);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .subject-name{font-size:14px;font-weight:700;letter-spacing:-.01em;}
+  .subject-count{font-size:11.5px;color:var(--ink-dim);}
+
+  /* ======================= QUIZ VIEW ======================= */
+  .quiz-header{
+    padding:18px 20px 0;
+  }
+  .quiz-meta{
+    display:flex;align-items:center;justify-content:space-between;
+    margin-bottom:10px;
+  }
+  .quiz-subject{font-size:13px;font-weight:700;color:var(--navy);}
+  .quiz-progress-text{font-size:12.5px;color:var(--ink-dim);}
+  .quiz-timer{
+    font-size:13px;font-weight:800;color:var(--navy);
+    background:var(--paper-dim);padding:5px 10px;border-radius:999px;
+    font-variant-numeric:tabular-nums;
+  }
+  .quiz-timer.low{color:var(--bad);background:#FBE7E3;}
+  .progress-track{
+    height:6px;border-radius:999px;background:var(--paper-dim);overflow:hidden;
+  }
+  .progress-fill{
+    height:100%;background:var(--navy);border-radius:999px;
+    transition:width .2s ease;
+  }
+
+  .question-card{
+    margin:20px 20px 0;
+    border:1px solid var(--line);
+    border-radius:var(--radius-lg);
+    padding:20px;
+  }
+  .question-num{font-size:12px;font-weight:700;color:var(--ink-dim);margin-bottom:8px;}
+  .question-text{font-size:16.5px;font-weight:700;line-height:1.45;letter-spacing:-.01em;margin-bottom:18px;}
+
+  .options{display:flex;flex-direction:column;gap:10px;}
+  .option{
+    display:flex;align-items:flex-start;gap:12px;
+    border:1px solid var(--line);
+    border-radius:var(--radius-sm);
+    padding:13px 14px;
+    font-size:14.5px;line-height:1.4;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .option-letter{
+    width:24px;height:24px;border-radius:50%;
+    border:1.5px solid var(--line);
+    display:flex;align-items:center;justify-content:center;
+    font-size:12px;font-weight:700;color:var(--ink-dim);
+    flex-shrink:0;
+  }
+  .option.selected{border-color:var(--navy);background:var(--paper-dim);}
+  .option.selected .option-letter{background:var(--navy);border-color:var(--navy);color:#fff;}
+
+  .quiz-nav{
+    display:flex;gap:10px;
+    padding:20px 20px 0;
+  }
+  .btn{
+    flex:1;padding:14px;border-radius:999px;
+    font-size:14.5px;font-weight:700;text-align:center;
+  }
+  .btn-primary{background:var(--navy);color:#fff;}
+  .btn-primary:disabled{background:#B7C0D4;}
+  .btn-ghost{background:var(--paper-dim);color:var(--ink);}
+
+  /* ======================= RESULTS VIEW ======================= */
+  .results-hero{
+    margin:22px 20px 0;
+    background:var(--navy);
+    border-radius:var(--radius-lg);
+    padding:28px 20px;
+    text-align:center;color:#fff;
+  }
+  .results-score{font-size:40px;font-weight:800;letter-spacing:-.02em;}
+  .results-score span{font-size:18px;color:#9DAAC9;font-weight:600;}
+  .results-label{font-size:13px;color:#B9C4E0;margin-top:4px;}
+
+  .results-stats{
+    display:grid;grid-template-columns:repeat(3,1fr);
+    gap:10px;padding:16px 20px 0;
+  }
+  .rstat{background:var(--paper-dim);border-radius:var(--radius-sm);padding:13px 10px;text-align:center;}
+  .rstat-num{font-size:17px;font-weight:800;color:var(--navy);}
+  .rstat-label{font-size:11px;color:var(--ink-dim);margin-top:2px;font-weight:600;}
+
+  .review-toggle{
+    margin:20px 20px 0;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:15px 16px;border:1px solid var(--line);border-radius:var(--radius-sm);
+  }
+  .review-toggle span{font-size:14px;font-weight:700;}
+
+  .review-list{padding:14px 20px 0;display:flex;flex-direction:column;gap:12px;}
+  .review-item{border:1px solid var(--line);border-radius:var(--radius-sm);padding:15px;}
+  .review-q{font-size:14px;font-weight:700;margin-bottom:10px;line-height:1.4;}
+  .review-opt{font-size:13px;padding:8px 10px;border-radius:8px;margin-bottom:6px;background:var(--paper-dim);}
+  .review-opt.correct{background:#E4F3EA;color:var(--good);font-weight:700;}
+  .review-opt.wrong{background:#FBE7E3;color:var(--bad);font-weight:700;}
+
+  .results-actions{padding:22px 20px 0;display:flex;flex-direction:column;gap:10px;}
+
+  @media (prefers-reduced-motion: reduce){
+    .subject-card, .progress-fill{transition:none;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ======================= SUBJECT SELECT VIEW ======================= -->
+  <div id="view-select">
+    <div class="topbar">
+      <a class="backbtn" href="index.html">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <div>
+        <div class="topbar-title">UTME Past Questions</div>
+        <div class="topbar-sub">Pick a subject to begin</div>
+      </div>
+    </div>
+    <div class="intro"><p>Questions are pulled from previous UTME papers. Work through them at your own pace — no timer here.</p></div>
+    <div class="subject-grid" id="subject-grid"><!-- injected --></div>
+  </div>
+
+  <!-- ======================= QUIZ VIEW ======================= -->
+  <div id="view-quiz" class="hidden">
+    <div class="quiz-header">
+      <div class="quiz-meta">
+        <div class="quiz-subject" id="quiz-subject-label">Subject</div>
+        <div class="quiz-timer" id="quiz-timer">05:00</div>
+      </div>
+      <div class="quiz-meta" style="margin-top:-2px;">
+        <div class="quiz-progress-text" id="quiz-progress-text">1 / 20</div>
+        <div></div>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    </div>
+
+    <div class="question-card">
+      <div class="question-num" id="question-num">Question 1</div>
+      <div class="question-text" id="question-text">Loading question…</div>
+      <div class="options" id="options-list"><!-- injected --></div>
+    </div>
+
+    <div class="quiz-nav">
+      <button class="btn btn-ghost" id="btn-prev">Previous</button>
+      <button class="btn btn-primary" id="btn-next" disabled>Next</button>
+    </div>
+  </div>
+
+  <!-- ======================= RESULTS VIEW ======================= -->
+  <div id="view-results" class="hidden">
+    <div class="topbar">
+      <div>
+        <div class="topbar-title">Results</div>
+        <div class="topbar-sub" id="results-subject-label">Subject</div>
+      </div>
+    </div>
+
+    <div class="results-hero">
+      <div class="results-score"><span id="results-correct">0</span><span> / <span id="results-total">0</span></span></div>
+      <div class="results-label" id="results-message">Nice work</div>
+    </div>
+
+    <div class="results-stats">
+      <div class="rstat"><div class="rstat-num" id="rstat-percent">0%</div><div class="rstat-label">Score</div></div>
+      <div class="rstat"><div class="rstat-num" id="rstat-correct">0</div><div class="rstat-label">Correct</div></div>
+      <div class="rstat"><div class="rstat-num" id="rstat-wrong">0</div><div class="rstat-label">Missed</div></div>
+    </div>
+
+    <button class="review-toggle" id="review-toggle">
+      <span>Review your answers</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="review-list hidden" id="review-list"><!-- injected --></div>
+
+    <div class="results-actions">
+      <button class="btn btn-primary" id="btn-try-another">Try another subject</button>
+      <a class="btn btn-ghost" href="index.html" style="display:block;">Back to home</a>
+    </div>
+  </div>
+
+</div>
+
+<!-- Firebase (compat SDK) -->
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyB3nxbOJHpJvSV1rrpXUy-RJBo_HG8xW6s",
+    authDomain: "past-question-bb34a.firebaseapp.com",
+    projectId: "past-question-bb34a",
+    storageBucket: "past-question-bb34a.firebasestorage.app",
+    messagingSenderId: "949891995843",
+    appId: "1:949891995843:web:28b137ac344b2bac31aa76"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  // ---------------- Subjects ----------------
+  const SUBJECTS = [
+    { id: "english",     name: "English Language", icon: iconBook() },
+    { id: "mathematics", name: "Mathematics",       icon: iconCalc() },
+    { id: "physics",     name: "Physics",           icon: iconAtom() },
+    { id: "chemistry",   name: "Chemistry",         icon: iconFlask() },
+    { id: "biology",     name: "Biology",           icon: iconLeaf() },
+    { id: "government",  name: "Government",        icon: iconBank() },
+    { id: "economics",   name: "Economics",         icon: iconChart() },
+    { id: "literature",  name: "Literature",        icon: iconFeather() },
+    { id: "crs",         name: "CRS",                icon: iconCross() },
+    { id: "irs",         name: "IRS",                icon: iconCrescent() },
+    { id: "commerce",    name: "Commerce",           icon: iconBag() },
+    { id: "accounting",  name: "Accounting",         icon: iconLedger() },
+  ];
+
+  function iconBook(){return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`}
+  function iconCalc(){return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="5" y="2" width="14" height="20" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M8 7h8M8 12h.01M12 12h.01M16 12h.01M8 16h.01M12 16h.01M16 16h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`}
+  function iconAtom(){return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="1.6" fill="currentColor"/><ellipse cx="12" cy="12" rx="9" ry="3.6" stroke="currentColor" stroke-width="1.6"/><ellipse cx="12" cy="12" rx="9" ry="3.6" stroke="currentColor" stroke-width="1.6" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="3.6" stroke="currentColor" stroke-width="1.6" transform="rotate(120 12 12)"/></svg>`}
+  function iconFlask(){return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 2h6M10 2v6.5L4.5 18a2 2 0 0 0 1.7 3h11.6a2 2 0 0 0 1.7-3L14 8.5V2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`}
+  function iconLeaf(){return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 21c8 0 14-6 14-15-9 0-15 6-15 15 3-6 7-9 12-11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`}
+  function iconBank(){return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 10l9-6 9 6M5 10v9M9 10v9M15 10v9M19 10v9M3 19h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`}
+  function iconChart(){return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 19h16M8 19v-6M13 19V9M18 19v-9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`}
+  function iconFeather(){return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M20 4S9 5 6 13c-1.6 4.3 1 7 5.5 7 6 0 8.5-9 8.5-16z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M11 21 21 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`}
+  function iconCross(){return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 3v18M5 9h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`}
+  function iconCrescent(){return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 3a9 9 0 1 0 6 15.5A9 9 0 0 1 15 3z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 8l.6 1.4L19 10l-1.4.6L17 12l-.6-1.4L15 10l1.4-.6z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>`}
+  function iconBag(){return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M6 8h12l-1 13H7L6 8z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 8V6a3 3 0 0 1 6 0v2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`}
+  function iconLedger(){return `<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="16" height="18" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M8 8h8M8 12h5M8 16h8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`}
+
+  const grid = document.getElementById("subject-grid");
+  grid.innerHTML = SUBJECTS.map(s => `
+    <button class="subject-card" data-subject="${s.id}" data-name="${s.name}">
+      <div class="subject-icon">${s.icon}</div>
+      <div>
+        <div class="subject-name">${s.name}</div>
+        <div class="subject-count" id="count-${s.id}">Loading…</div>
+      </div>
+    </button>
+  `).join("");
+
+  // Prefetch counts so students know how many questions are available
+  SUBJECTS.forEach(async (s) => {
+    try {
+      const snap = await db.collection("pastQuestions").where("subject", "==", s.id).get();
+      const el = document.getElementById(`count-${s.id}`);
+      if (el) el.textContent = `${snap.size} question${snap.size === 1 ? "" : "s"}`;
+    } catch (e) {
+      const el = document.getElementById(`count-${s.id}`);
+      if (el) el.textContent = "—";
+    }
+  });
+
+  grid.addEventListener("click", (e) => {
+    const card = e.target.closest(".subject-card");
+    if (!card) return;
+    startQuiz(card.dataset.subject, card.dataset.name);
+  });
+
+  // ---------------- Quiz state ----------------
+  const viewSelect = document.getElementById("view-select");
+  const viewQuiz = document.getElementById("view-quiz");
+  const viewResults = document.getElementById("view-results");
+
+  let currentSubjectId = null;
+  let currentSubjectName = null;
+  let questions = [];
+  let currentIndex = 0;
+  let answers = []; // stores selected option index per question, or null
+
+  const QUESTION_LIMIT = 20;
+  const LETTERS = ["A", "B", "C", "D"];
+  const TIME_LIMIT_SECONDS = 5 * 60;
+  let timeRemaining = TIME_LIMIT_SECONDS;
+  let timerInterval = null;
+
+  function formatTime(sec){
+    const m = Math.floor(sec / 60).toString().padStart(2, "0");
+    const s = (sec % 60).toString().padStart(2, "0");
+    return `${m}:${s}`;
+  }
+
+  function startTimer(){
+    clearInterval(timerInterval);
+    timeRemaining = TIME_LIMIT_SECONDS;
+    const el = document.getElementById("quiz-timer");
+    el.textContent = formatTime(timeRemaining);
+    el.classList.remove("low");
+
+    timerInterval = setInterval(() => {
+      timeRemaining--;
+      el.textContent = formatTime(Math.max(timeRemaining, 0));
+      if (timeRemaining <= 30) el.classList.add("low");
+      if (timeRemaining <= 0){
+        clearInterval(timerInterval);
+        finishQuiz();
+      }
+    }, 1000);
+  }
+
+  function stopTimer(){
+    clearInterval(timerInterval);
+  }
+
+  async function startQuiz(subjectId, subjectName){
+    currentSubjectId = subjectId;
+    currentSubjectName = subjectName;
+
+    document.getElementById("question-text").textContent = "Loading questions…";
+    viewSelect.classList.add("hidden");
+    viewQuiz.classList.remove("hidden");
+    document.getElementById("quiz-subject-label").textContent = subjectName;
+
+    try {
+      const snap = await db.collection("pastQuestions")
+        .where("subject", "==", subjectId)
+        .limit(QUESTION_LIMIT)
+        .get();
+
+      questions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+      if (questions.length === 0){
+        document.getElementById("question-text").textContent =
+          `No questions have been added for ${subjectName} yet — check back soon.`;
+        document.getElementById("options-list").innerHTML = "";
+        document.getElementById("btn-next").classList.add("hidden");
+        return;
+      }
+
+      answers = new Array(questions.length).fill(null);
+      currentIndex = 0;
+      renderQuestion();
+      startTimer();
+    } catch (e) {
+      document.getElementById("question-text").textContent = "Couldn't load questions. Check your connection and try again.";
+      console.warn(e.message);
+    }
+  }
+
+  function renderQuestion(){
+    const q = questions[currentIndex];
+    document.getElementById("question-num").textContent = `Question ${currentIndex + 1}`;
+    document.getElementById("question-text").textContent = q.question || "Untitled question";
+    document.getElementById("quiz-progress-text").textContent = `${currentIndex + 1} / ${questions.length}`;
+    document.getElementById("progress-fill").style.width = `${((currentIndex + 1) / questions.length) * 100}%`;
+
+    const optsList = document.getElementById("options-list");
+    const options = q.options || [];
+    optsList.innerHTML = options.map((opt, i) => `
+      <div class="option ${answers[currentIndex] === i ? "selected" : ""}" data-index="${i}">
+        <div class="option-letter">${LETTERS[i] || i + 1}</div>
+        <div>${opt}</div>
+      </div>
+    `).join("");
+
+    document.getElementById("btn-prev").style.visibility = currentIndex === 0 ? "hidden" : "visible";
+    updateNextButton();
+  }
+
+  document.getElementById("options-list").addEventListener("click", (e) => {
+    const opt = e.target.closest(".option");
+    if (!opt) return;
+    answers[currentIndex] = Number(opt.dataset.index);
+    renderQuestion();
+  });
+
+  function updateNextButton(){
+    const btn = document.getElementById("btn-next");
+    const answered = answers[currentIndex] !== null;
+    btn.disabled = !answered;
+    btn.textContent = currentIndex === questions.length - 1 ? "Submit" : "Next";
+  }
+
+  document.getElementById("btn-prev").addEventListener("click", () => {
+    if (currentIndex > 0){ currentIndex--; renderQuestion(); }
+  });
+
+  document.getElementById("btn-next").addEventListener("click", () => {
+    if (currentIndex < questions.length - 1){
+      currentIndex++;
+      renderQuestion();
+    } else {
+      finishQuiz();
+    }
+  });
+
+  // ---------------- Results ----------------
+  async function finishQuiz(){
+    stopTimer();
+    let correctCount = 0;
+    questions.forEach((q, i) => {
+      if (answers[i] === q.correctIndex) correctCount++;
+    });
+    const total = questions.length;
+    const percent = Math.round((correctCount / total) * 100);
+
+    viewQuiz.classList.add("hidden");
+    viewResults.classList.remove("hidden");
+
+    document.getElementById("results-subject-label").textContent = currentSubjectName;
+    document.getElementById("results-correct").textContent = correctCount;
+    document.getElementById("results-total").textContent = total;
+    document.getElementById("rstat-percent").textContent = `${percent}%`;
+    document.getElementById("rstat-correct").textContent = correctCount;
+    document.getElementById("rstat-wrong").textContent = total - correctCount;
+
+    const msgEl = document.getElementById("results-message");
+    msgEl.textContent = percent >= 70 ? "Strong result — keep it up"
+      : percent >= 40 ? "Good effort — a bit more practice will help"
+      : "Keep practicing, you'll get there";
+
+    const reviewList = document.getElementById("review-list");
+    reviewList.innerHTML = questions.map((q, i) => {
+      const opts = q.options || [];
+      const optsHtml = opts.map((opt, oi) => {
+        let cls = "review-opt";
+        if (oi === q.correctIndex) cls += " correct";
+        else if (oi === answers[i]) cls += " wrong";
+        return `<div class="${cls}">${LETTERS[oi] || oi + 1}. ${opt}</div>`;
+      }).join("");
+      return `<div class="review-item"><div class="review-q">${i + 1}. ${q.question}</div>${optsHtml}</div>`;
+    }).join("");
+
+    // Save result if signed in
+    const user = auth.currentUser;
+    if (user){
+      try {
+        await db.collection("results").add({
+          uid: user.uid,
+          subject: currentSubjectId,
+          totalScore: correctCount,
+          totalQuestions: total,
+          percent,
+          mode: "pastQuestions",
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        // Keep the leaderboard's running total in sync
+        await db.collection("leaderboard").doc(user.uid).set({
+          uid: user.uid,
+          name: user.displayName || (user.email ? user.email.split("@")[0] : "Student"),
+          score: firebase.firestore.FieldValue.increment(correctCount),
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true });
+      } catch (e) {
+        console.warn("Could not save result:", e.message);
+      }
+    }
+  }
+
+  document.getElementById("review-toggle").addEventListener("click", () => {
+    document.getElementById("review-list").classList.toggle("hidden");
+  });
+
+  document.getElementById("btn-try-another").addEventListener("click", () => {
+    viewResults.classList.add("hidden");
+    viewSelect.classList.remove("hidden");
+  });
+</script>
+</body>
+</html>

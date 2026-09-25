@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Zenova UTME — Profile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy-deep:#05112A; --navy:#0B1F3A; --paper:#FFFFFF; --paper-dim:#F5F7FB;
+    --line:#E3E8F0; --ink:#0B1F3A; --ink-dim:#5B6B85; --good:#1E8E5A; --bad:#C7402C;
+    --radius-lg:20px; --radius-sm:12px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Plus Jakarta Sans', system-ui, sans-serif;
+    background:var(--paper); color:var(--ink); -webkit-font-smoothing:antialiased;
+    padding-bottom:96px;
+  }
+  a,button{text-decoration:none;color:inherit;font-family:inherit;}
+  button{border:none;background:none;cursor:pointer;}
+  .wrap{max-width:480px;margin:0 auto;position:relative;min-height:100vh;background:var(--paper);}
+  svg{display:block;}
+  .hidden{display:none !important;}
+
+  /* Top bar */
+  .topbar{display:flex;align-items:center;gap:12px;padding:20px 20px 6px;}
+  .backbtn{
+    width:36px;height:36px;border-radius:10px;background:var(--paper-dim);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .topbar-title{font-size:17px;font-weight:800;letter-spacing:-.01em;}
+
+  /* Profile header */
+  .profile-header{padding:22px 20px 6px;display:flex;align-items:center;gap:14px;}
+  .profile-avatar{
+    width:64px;height:64px;border-radius:50%;background:var(--navy);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;flex-shrink:0;
+  }
+  .profile-info{flex:1;min-width:0;}
+  .profile-name-row{display:flex;align-items:center;gap:8px;}
+  .profile-name{font-size:19px;font-weight:800;letter-spacing:-.01em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .edit-btn{
+    width:26px;height:26px;border-radius:8px;background:var(--paper-dim);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--ink-dim);
+  }
+  .profile-email{font-size:13px;color:var(--ink-dim);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+  .edit-name-box{
+    display:none;padding:0 20px;margin-top:14px;gap:10px;
+  }
+  .edit-name-box.show{display:flex;}
+  .edit-name-box input{
+    flex:1;padding:11px 13px;border-radius:10px;border:1px solid var(--line);
+    background:var(--paper-dim);font-size:14px;font-family:inherit;
+  }
+  .edit-name-box button{
+    padding:0 16px;border-radius:10px;font-size:13px;font-weight:700;
+  }
+  .edit-save{background:var(--navy);color:#fff;}
+  .edit-cancel{background:var(--paper-dim);color:var(--ink-dim);}
+
+  /* Stats */
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:22px 20px 0;}
+  .stat{background:var(--paper-dim);border-radius:var(--radius-sm);padding:14px 10px;text-align:center;}
+  .stat-num{font-size:19px;font-weight:800;color:var(--navy);letter-spacing:-.01em;}
+  .stat-label{font-size:11px;color:var(--ink-dim);margin-top:3px;font-weight:600;}
+
+  /* Section title */
+  .section-title{padding:26px 20px 10px;font-size:13px;font-weight:700;color:var(--ink-dim);}
+
+  /* Activity list */
+  .activity-list{padding:0 20px;display:flex;flex-direction:column;gap:10px;}
+  .activity-item{
+    display:flex;align-items:center;gap:12px;
+    border:1px solid var(--line);border-radius:var(--radius-sm);padding:13px 14px;
+  }
+  .activity-icon{
+    width:38px;height:38px;border-radius:11px;background:var(--paper-dim);color:var(--navy);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .activity-body{flex:1;min-width:0;}
+  .activity-subject{font-size:13.5px;font-weight:700;text-transform:capitalize;}
+  .activity-date{font-size:11.5px;color:var(--ink-dim);margin-top:1px;}
+  .activity-score{font-size:13.5px;font-weight:800;color:var(--navy);flex-shrink:0;}
+  .activity-empty{padding:24px 0;text-align:center;font-size:13.5px;color:var(--ink-dim);}
+
+  /* Actions */
+  .actions{padding:26px 20px 0;}
+  .btn-signout{
+    width:100%;padding:14px;border-radius:999px;border:1px solid #F1C9C0;
+    background:#FBE7E3;color:var(--bad);font-size:14.5px;font-weight:700;text-align:center;
+  }
+
+  /* Bottom nav */
+  .bottomnav{
+    position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+    width:100%;max-width:480px;background:#fff;border-top:1px solid var(--line);
+    display:flex;justify-content:space-around;
+    padding:10px 6px calc(10px + env(safe-area-inset-bottom));
+  }
+  .nav-item{
+    display:flex;flex-direction:column;align-items:center;gap:5px;
+    font-size:10.5px;font-weight:600;color:var(--ink-dim);flex:1;
+  }
+  .nav-item svg{stroke:var(--ink-dim);}
+  .nav-item.active{color:var(--navy);}
+  .nav-item.active svg{stroke:var(--navy);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <a class="backbtn" href="index.html">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <div class="topbar-title">Profile</div>
+  </div>
+
+  <div class="profile-header">
+    <div class="profile-avatar" id="avatar">–</div>
+    <div class="profile-info">
+      <div class="profile-name-row">
+        <div class="profile-name" id="display-name">Loading…</div>
+        <button class="edit-btn" id="btn-edit-name">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 20h9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <div class="profile-email" id="display-email">—</div>
+    </div>
+  </div>
+
+  <div class="edit-name-box" id="edit-name-box">
+    <input type="text" id="edit-name-input" placeholder="Your name">
+    <button class="edit-save" id="btn-save-name">Save</button>
+    <button class="edit-cancel" id="btn-cancel-name">Cancel</button>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-num" id="stat-tests">0</div>
+      <div class="stat-label">Tests taken</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" id="stat-best">—</div>
+      <div class="stat-label">Best %</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" id="stat-rank">—</div>
+      <div class="stat-label">Leaderboard rank</div>
+    </div>
+  </div>
+
+  <div class="section-title">Recent activity</div>
+  <div class="activity-list" id="activity-list">
+    <div class="activity-empty">Loading…</div>
+  </div>
+
+  <div class="actions">
+    <button class="btn-signout" id="btn-signout">Log Out</button>
+  </div>
+
+  <div class="bottomnav">
+    <a class="nav-item" href="index.html">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 11.5 12 4l9 7.5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 10v9.5a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Home
+    </a>
+    <a class="nav-item" href="past-questions.html">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Practice
+    </a>
+    <a class="nav-item" href="leaderboard.html">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 6H4a1 1 0 0 0-1 1c0 2.5 1.8 4.5 4 4.9M17 6h3a1 1 0 0 1 1 1c0 2.5-1.8 4.5-4 4.9" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Rank
+    </a>
+    <a class="nav-item active" href="profile.html">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.4" stroke-width="1.8"/><path d="M5 20c1.2-3.6 4-5.4 7-5.4s5.8 1.8 7 5.4" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Profile
+    </a>
+  </div>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyB3nxbOJHpJvSV1rrpXUy-RJBo_HG8xW6s",
+    authDomain: "past-question-bb34a.firebaseapp.com",
+    projectId: "past-question-bb34a",
+    storageBucket: "past-question-bb34a.firebasestorage.app",
+    messagingSenderId: "949891995843",
+    appId: "1:949891995843:web:28b137ac344b2bac31aa76"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  function initials(name){
+    if (!name) return "?";
+    const parts = name.trim().split(/\s+/);
+    return (parts[0][0] + (parts[1] ? parts[1][0] : "")).toUpperCase();
+  }
+
+  auth.onAuthStateChanged(async (user) => {
+    if (!user){
+      window.location.href = "login.html";
+      return;
+    }
+
+    const name = user.displayName || (user.email ? user.email.split("@")[0] : "Student");
+    document.getElementById("display-name").textContent = name;
+    document.getElementById("display-email").textContent = user.email || "";
+    document.getElementById("avatar").textContent = initials(name);
+    document.getElementById("edit-name-input").value = name;
+
+    loadStats(user);
+    loadActivity(user);
+  });
+
+  // ---------------- Edit name ----------------
+  const editBox = document.getElementById("edit-name-box");
+  document.getElementById("btn-edit-name").addEventListener("click", () => {
+    editBox.classList.add("show");
+  });
+  document.getElementById("btn-cancel-name").addEventListener("click", () => {
+    editBox.classList.remove("show");
+  });
+  document.getElementById("btn-save-name").addEventListener("click", async () => {
+    const newName = document.getElementById("edit-name-input").value.trim();
+    if (!newName) return;
+    const user = auth.currentUser;
+
+    const btn = document.getElementById("btn-save-name");
+    btn.disabled = true;
+    btn.textContent = "Saving…";
+
+    try {
+      await user.updateProfile({ displayName: newName });
+      await db.collection("users").doc(user.uid).set({ name: newName }, { merge: true });
+      await db.collection("leaderboard").doc(user.uid).set({ name: newName }, { merge: true });
+
+      document.getElementById("display-name").textContent = newName;
+      document.getElementById("avatar").textContent = initials(newName);
+      editBox.classList.remove("show");
+    } catch (e) {
+      alert("Couldn't update your name — try again.");
+      console.warn(e.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Save";
+    }
+  });
+
+  // ---------------- Stats ----------------
+  async function loadStats(user){
+    try {
+      const resultsSnap = await db.collection("results").where("uid", "==", user.uid).get();
+      const results = resultsSnap.docs.map(d => d.data());
+      document.getElementById("stat-tests").textContent = results.length;
+
+      if (results.length){
+        const bestPercent = Math.max(...results.map(r => r.percent || 0));
+        document.getElementById("stat-best").textContent = `${bestPercent}%`;
+      }
+    } catch (e) {
+      console.warn("Could not load stats:", e.message);
+    }
+
+    try {
+      const lbSnap = await db.collection("leaderboard").orderBy("score", "desc").get();
+      const idx = lbSnap.docs.findIndex(d => d.id === user.uid);
+      document.getElementById("stat-rank").textContent = idx === -1 ? "—" : `#${idx + 1}`;
+    } catch (e) {
+      console.warn("Could not load rank:", e.message);
+    }
+  }
+
+  // ---------------- Recent activity ----------------
+  async function loadActivity(user){
+    const listEl = document.getElementById("activity-list");
+    try {
+      const snap = await db.collection("results")
+        .where("uid", "==", user.uid)
+        .orderBy("createdAt", "desc")
+        .limit(10)
+        .get();
+
+      if (snap.empty){
+        listEl.innerHTML = `<div class="activity-empty">No practice attempts yet — head to Practice to get started.</div>`;
+        return;
+      }
+
+      listEl.innerHTML = snap.docs.map(doc => {
+        const d = doc.data();
+        const date = d.createdAt && d.createdAt.toDate ? d.createdAt.toDate() : null;
+        const dateStr = date ? date.toLocaleDateString(undefined, { month: "short", day: "numeric" }) : "";
+        return `
+          <div class="activity-item">
+            <div class="activity-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="activity-body">
+              <div class="activity-subject">${d.subject || "Practice"}</div>
+              <div class="activity-date">${dateStr}</div>
+            </div>
+            <div class="activity-score">${d.totalScore ?? "—"}/${d.totalQuestions ?? "—"}</div>
+          </div>`;
+      }).join("");
+    } catch (e) {
+      listEl.innerHTML = `<div class="activity-empty">Couldn't load your activity.</div>`;
+      console.warn(e.message);
+    }
+  }
+
+  // ---------------- Sign out ----------------
+  document.getElementById("btn-signout").addEventListener("click", async () => {
+    await auth.signOut();
+    window.location.href = "login.html";
+  });
+</script>
+</body>
+</html>

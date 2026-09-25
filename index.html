@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Zenova UTME — Home</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy-deep:#05112A;
+    --navy:#0B1F3A;
+    --navy-soft:#13294F;
+    --paper:#FFFFFF;
+    --paper-dim:#F5F7FB;
+    --line:#E3E8F0;
+    --ink:#0B1F3A;
+    --ink-dim:#5B6B85;
+    --gold:#C99A2E;
+    --radius-lg:20px;
+    --radius-sm:12px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Plus Jakarta Sans', system-ui, sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    padding-bottom:88px;
+  }
+  a{text-decoration:none;color:inherit;}
+  .wrap{max-width:480px;margin:0 auto;position:relative;min-height:100vh;background:var(--paper);}
+  svg{display:block;}
+
+  /* ---------- Top bar ---------- */
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:20px 20px 0;
+  }
+  .brand{display:flex;align-items:center;gap:10px;}
+  .brand-mark{
+    width:36px;height:36px;border-radius:10px;
+    background:var(--navy);
+    display:flex;align-items:center;justify-content:center;
+    color:#fff;
+  }
+  .brand-name{font-weight:700;font-size:15px;letter-spacing:-.01em;}
+  .brand-name span{color:var(--ink-dim);font-weight:500;}
+  .avatar{
+    width:38px;height:38px;border-radius:50%;
+    background:var(--paper-dim);border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;
+    font-size:13px;font-weight:700;color:var(--navy);
+    overflow:hidden;
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{padding:26px 20px 8px;}
+  .hero-eyebrow{
+    font-size:13px;color:var(--ink-dim);font-weight:600;margin-bottom:6px;
+  }
+  .hero h1{
+    font-size:29px;line-height:1.2;letter-spacing:-.02em;
+    margin:0 0 10px;font-weight:800;
+  }
+  .hero h1 em{
+    font-style:normal;color:var(--navy);
+  }
+  .hero p{
+    font-size:15px;line-height:1.55;color:var(--ink-dim);
+    margin:0;max-width:36ch;
+  }
+
+  .countdown{
+    margin:18px 20px 0;
+    background:var(--navy);
+    border-radius:var(--radius-lg);
+    padding:17px 18px;
+    display:flex;align-items:center;justify-content:space-between;
+    color:#fff;
+  }
+  .countdown-label{font-size:12.5px;color:#9DAAC9;font-weight:600;}
+  .countdown-value{font-size:19px;font-weight:800;margin-top:3px;letter-spacing:-.01em;}
+  .countdown-cta{
+    background:rgba(255,255,255,.12);color:#fff;
+    font-size:12.5px;font-weight:700;
+    padding:9px 14px;border-radius:999px;
+    white-space:nowrap;
+    border:1px solid rgba(255,255,255,.18);
+  }
+
+  /* ---------- Section title ---------- */
+  .section-title{
+    padding:26px 20px 10px;
+    font-size:13px;font-weight:700;color:var(--ink-dim);
+  }
+
+  /* ---------- Mode cards ---------- */
+  .modes{padding:0 20px;display:flex;flex-direction:column;gap:12px;}
+  .mode-card{
+    border:1px solid var(--line);
+    border-radius:var(--radius-lg);
+    padding:18px;
+    display:flex;align-items:center;gap:14px;
+    background:var(--paper);
+    transition:border-color .15s ease, transform .15s ease;
+  }
+  .mode-card:active{transform:scale(.98);}
+  .mode-card.primary{
+    background:var(--navy);
+    border-color:var(--navy);
+    color:#fff;
+  }
+  .mode-icon{
+    width:50px;height:50px;border-radius:14px;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+    background:var(--paper-dim);
+    color:var(--navy);
+  }
+  .mode-card.primary .mode-icon{background:rgba(255,255,255,.12);color:#fff;}
+  .mode-body{flex:1;min-width:0;}
+  .mode-title{font-size:16px;font-weight:700;letter-spacing:-.01em;margin-bottom:3px;}
+  .mode-desc{font-size:13px;color:var(--ink-dim);line-height:1.4;}
+  .mode-card.primary .mode-desc{color:#B9C4E0;}
+  .mode-arrow{flex-shrink:0;color:var(--ink-dim);}
+  .mode-card.primary .mode-arrow{color:#fff;}
+
+  /* ---------- Stats strip ---------- */
+  .stats{
+    display:grid;grid-template-columns:repeat(3,1fr);
+    gap:10px;padding:18px 20px 0;
+  }
+  .stat{
+    background:var(--paper-dim);
+    border-radius:var(--radius-sm);
+    padding:13px 10px;text-align:center;
+  }
+  .stat-num{font-size:18px;font-weight:800;color:var(--navy);letter-spacing:-.01em;}
+  .stat-label{font-size:11px;color:var(--ink-dim);margin-top:2px;font-weight:600;}
+
+  /* ---------- Leaderboard preview ---------- */
+  .lb-header{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:26px 20px 10px;
+  }
+  .lb-header .section-title{padding:0;}
+  .lb-link{font-size:12.5px;font-weight:700;color:var(--navy);}
+  .lb-card{
+    margin:0 20px;
+    border:1px solid var(--line);
+    border-radius:var(--radius-lg);
+    overflow:hidden;
+  }
+  .lb-row{
+    display:flex;align-items:center;gap:12px;
+    padding:13px 16px;
+    border-bottom:1px solid var(--line);
+  }
+  .lb-row:last-child{border-bottom:none;}
+  .lb-rank{
+    width:26px;height:26px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:12px;font-weight:800;flex-shrink:0;
+    background:var(--paper-dim);color:var(--ink-dim);
+  }
+  .lb-row:nth-child(1) .lb-rank{background:#EFE0BE;color:#8A6D00;}
+  .lb-row:nth-child(2) .lb-rank{background:#E7EAF0;color:#4B5871;}
+  .lb-row:nth-child(3) .lb-rank{background:#EFD9C4;color:#8A4E1F;}
+  .lb-name{flex:1;font-size:13.5px;font-weight:600;}
+  .lb-score{font-size:13px;font-weight:800;color:var(--navy);}
+  .lb-empty{padding:20px 16px;font-size:13px;color:var(--ink-dim);text-align:center;}
+
+  /* ---------- Bottom nav ---------- */
+  .bottomnav{
+    position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+    width:100%;max-width:480px;
+    background:#fff;border-top:1px solid var(--line);
+    display:flex;justify-content:space-around;
+    padding:10px 6px calc(10px + env(safe-area-inset-bottom));
+  }
+  .nav-item{
+    display:flex;flex-direction:column;align-items:center;gap:5px;
+    font-size:10.5px;font-weight:600;color:var(--ink-dim);
+    flex:1;
+  }
+  .nav-item svg{stroke:var(--ink-dim);}
+  .nav-item.active{color:var(--navy);}
+  .nav-item.active svg{stroke:var(--navy);}
+
+  @media (prefers-reduced-motion: reduce){
+    .mode-card{transition:none;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 19V5a2 2 0 0 1 2-2h11.5a1.5 1.5 0 0 1 1.5 1.5v14" stroke="#C99A2E" stroke-width="2" stroke-linecap="round"/><path d="M4 19a2 2 0 0 0 2 2h13" stroke="#C99A2E" stroke-width="2" stroke-linecap="round"/></svg>
+      </div>
+      <div class="brand-name">Zenova <span>UTME</span></div>
+    </div>
+    <a class="avatar" id="avatar" href="profile.html">–</a>
+  </div>
+
+  <div class="hero">
+    <div class="hero-eyebrow" id="greeting">Welcome back</div>
+    <h1>Ready for <em>today's</em> practice?</h1>
+    <p>Work through real past questions or sit a full timed mock — then see where you rank.</p>
+  </div>
+
+  <div class="countdown">
+    <div>
+      <div class="countdown-label">2026 UTME in</div>
+      <div class="countdown-value">214 days</div>
+    </div>
+    <div class="countdown-cta">Set target score</div>
+  </div>
+
+  <div class="section-title">Choose how you want to study</div>
+  <div class="modes">
+    <a class="mode-card primary" href="past-questions.html">
+      <div class="mode-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="mode-body">
+        <div class="mode-title">UTME Past Questions</div>
+        <div class="mode-desc">Practice by subject, at your own pace</div>
+      </div>
+      <div class="mode-arrow"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    </a>
+    <a class="mode-card" href="full-practice.html">
+      <div class="mode-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="13" r="8" stroke="currentColor" stroke-width="1.8"/><path d="M12 9v4l3 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 2h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </div>
+      <div class="mode-body">
+        <div class="mode-title">Full Practice Test</div>
+        <div class="mode-desc">4 subjects, timed, scored out of 400</div>
+      </div>
+      <div class="mode-arrow"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    </a>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-num" id="stat-tests">0</div>
+      <div class="stat-label">Tests taken</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" id="stat-best">—</div>
+      <div class="stat-label">Best score</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" id="stat-rank">—</div>
+      <div class="stat-label">Your rank</div>
+    </div>
+  </div>
+
+  <div class="lb-header">
+    <div class="section-title">Leaderboard</div>
+    <a class="lb-link" href="leaderboard.html">See all →</a>
+  </div>
+  <div class="lb-card" id="lb-card">
+    <div class="lb-empty">Loading leaderboard…</div>
+  </div>
+
+  <div class="bottomnav">
+    <a class="nav-item active" href="index.html">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 11.5 12 4l9 7.5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 10v9.5a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Home
+    </a>
+    <a class="nav-item" href="past-questions.html">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Practice
+    </a>
+    <a class="nav-item" href="leaderboard.html">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 6H4a1 1 0 0 0-1 1c0 2.5 1.8 4.5 4 4.9M17 6h3a1 1 0 0 1 1 1c0 2.5-1.8 4.5-4 4.9" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Rank
+    </a>
+    <a class="nav-item" href="profile.html">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.4" stroke-width="1.8"/><path d="M5 20c1.2-3.6 4-5.4 7-5.4s5.8 1.8 7 5.4" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Profile
+    </a>
+  </div>
+
+</div>
+
+<!-- Firebase (compat SDK) -->
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyB3nxbOJHpJvSV1rrpXUy-RJBo_HG8xW6s",
+    authDomain: "past-question-bb34a.firebaseapp.com",
+    projectId: "past-question-bb34a",
+    storageBucket: "past-question-bb34a.firebasestorage.app",
+    messagingSenderId: "949891995843",
+    appId: "1:949891995843:web:28b137ac344b2bac31aa76"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  function initials(name){
+    if(!name) return "?";
+    const parts = name.trim().split(/\s+/);
+    return (parts[0][0] + (parts[1] ? parts[1][0] : "")).toUpperCase();
+  }
+
+  auth.onAuthStateChanged(async (user) => {
+    const greeting = document.getElementById("greeting");
+    const avatar = document.getElementById("avatar");
+
+    if (!user) {
+      // Not signed in — send to login, keep page usable if login.html isn't built yet
+      greeting.textContent = "Welcome — sign in to save your progress";
+      avatar.textContent = "?";
+      return;
+    }
+
+    const name = user.displayName || (user.email ? user.email.split("@")[0] : "Student");
+    greeting.textContent = `Good to see you, ${name.split(" ")[0]}`;
+    avatar.textContent = initials(name);
+
+    // Pull this student's stats
+    try {
+      const resultsSnap = await db.collection("results")
+        .where("uid", "==", user.uid).get();
+      const scores = resultsSnap.docs.map(d => d.data().totalScore).filter(n => typeof n === "number");
+      document.getElementById("stat-tests").textContent = scores.length;
+      if (scores.length) {
+        document.getElementById("stat-best").textContent = Math.max(...scores);
+      }
+    } catch (e) {
+      console.warn("Could not load student stats:", e.message);
+    }
+  });
+
+  // Leaderboard — top 3 by score
+  async function loadLeaderboard(){
+    const card = document.getElementById("lb-card");
+    try {
+      const snap = await db.collection("leaderboard")
+        .orderBy("score", "desc").limit(3).get();
+
+      if (snap.empty) {
+        card.innerHTML = `<div class="lb-empty">No scores yet — be the first on the board.</div>`;
+        return;
+      }
+
+      card.innerHTML = snap.docs.map((doc, i) => {
+        const d = doc.data();
+        return `
+          <div class="lb-row">
+            <div class="lb-rank">${i + 1}</div>
+            <div class="lb-name">${d.name || "Anonymous"}</div>
+            <div class="lb-score">${d.score ?? "—"}</div>
+          </div>`;
+      }).join("");
+    } catch (e) {
+      card.innerHTML = `<div class="lb-empty">Leaderboard unavailable right now.</div>`;
+      console.warn("Could not load leaderboard:", e.message);
+    }
+  }
+  loadLeaderboard();
+</script>
+</body>
+</html>
